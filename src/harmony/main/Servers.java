@@ -22,6 +22,7 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class Servers extends JFrame {
 
@@ -86,8 +87,9 @@ public class Servers extends JFrame {
 		contentPane.add(btnConnect);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon(Login.api.getYourself().getAvatar().get()));
-		lblNewLabel.setBounds(86, 76, 253, 184);
+		lblNewLabel.setBounds(95, 76, 253, 184);
 		contentPane.add(lblNewLabel);
 	}
 

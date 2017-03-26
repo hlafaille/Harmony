@@ -19,7 +19,9 @@ import javax.swing.border.EmptyBorder;
 import com.google.common.util.concurrent.FutureCallback;
 
 import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.MessageHistory;
+import de.btobastian.javacord.listener.message.MessageCreateListener;
 
 import javax.swing.JTextPane;
 import javax.swing.ListModel;
@@ -55,8 +57,6 @@ public class Chat extends JFrame {
 				}
 			}
 		});
-		Timer timer = new Timer();
-		timer.schedule(new ChatTimer(), 0, 1000);
 	}
 
 	/**
@@ -71,6 +71,14 @@ public class Chat extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		Login.api.registerListener(new MessageCreateListener() {
+			  @Override
+			  public void onMessageCreate(DiscordAPI api, Message message) {
+				  refreshChat();
+			  }
+			});
+
 		
 		comboBox = new JComboBox(Servers.server.getChannels().toArray());
 		comboBox.setBounds(10, 11, 326, 20);
@@ -95,6 +103,7 @@ public class Chat extends JFrame {
 		JButton btnSelect = new JButton("Select");
 		btnSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				refreshChat();
 			}
 		});
 		btnSelect.setBounds(339, 10, 89, 23);
@@ -111,9 +120,8 @@ public class Chat extends JFrame {
 		btnClear.setBounds(438, 10, 89, 23);
 		contentPane.add(btnClear);
 		
-		
-		
 	}
+	
 	public static void refreshChat(){
 		String s  = comboBox.getSelectedItem().toString();
 	    System.out.println(s=s.replaceAll("[^0-9]", ""));
@@ -122,11 +130,13 @@ public class Chat extends JFrame {
 	    while(tok.hasMoreTokens()){
 	        s1+= tok.nextToken();
 	    }
-	    Future<MessageHistory> future = Servers.server.getChannelById(s1).getMessageHistory(10);
+	    Future<MessageHistory> future = Servers.server.getChannelById(s1).getMessageHistory(20);
 	    try{
 	    	//System.out.println(future.get().getMessages().toArray());
-			list = new JList(future.get().getMessagesSorted().toArray());
+			list = new JList();
+			list.setListData(future.get().getMessagesSorted().toArray());
 			list.setBounds(10, 42, 791, 426);
+			list.setAutoscrolls(true);
 			contentPane.add(list);
 			list.updateUI();
 	    } catch (InterruptedException e1) {
