@@ -1,6 +1,7 @@
 # Harmony
 A Java-based Discord client
----
+<hr>
+<br>
 "We are in harmony"
 ![alt tag](https://blzgdapipro-a.akamaihd.net/media/artwork/zenyatta-concept.jpg)
 
