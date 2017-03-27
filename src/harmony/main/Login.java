@@ -19,6 +19,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Login extends JFrame {
 
@@ -30,10 +32,29 @@ public class Login extends JFrame {
 	public static DiscordAPI api;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	static JLabel lblStatus;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			
 			public void run() {
 				try {
+					try {
+			            // Set System L&F
+			        UIManager.setLookAndFeel(
+			            UIManager.getSystemLookAndFeelClassName());
+				    } 
+				    catch (UnsupportedLookAndFeelException e) {
+				       // handle exception
+				    }
+				    catch (ClassNotFoundException e) {
+				       // handle exception
+				    }
+				    catch (InstantiationException e) {
+				       // handle exception
+				    }
+				    catch (IllegalAccessException e) {
+				       // handle exception
+				    }
 					Login frame = new Login();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -68,18 +89,30 @@ public class Login extends JFrame {
 		JButton btnNewButton = new JButton("Login");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				lblStatus.setText("Attempting connection...");
 				api = Javacord.getApi(textField.getText(), passwordField.getText());
 				api.connect(new FutureCallback<DiscordAPI>() {
 					  @Override
 					  public void onSuccess(final DiscordAPI api) {
 						  System.out.println("Connected to Discord!");
+						  lblStatus.setText("Getting servers...");
+						  try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						  System.out.println(api.getServers());
 						  Servers.main();
+						  setVisible(false);
+						  dispose();
 					  }
 
 					  @Override
 					  public void onFailure(Throwable t) {
 						  System.out.println("FAILED!");
+						  lblStatus.setText("Failed, wrong login?");
+						  api.disconnect();
 					    t.printStackTrace();
 					  }
 					});
@@ -88,9 +121,10 @@ public class Login extends JFrame {
 		btnNewButton.setBounds(100, 138, 225, 23);
 		contentPane.add(btnNewButton);
 		
-		JLabel lblHarmony = new JLabel("Harmony");
-		lblHarmony.setFont(new Font("Tahoma", Font.BOLD, 22));
-		lblHarmony.setBounds(10, 11, 102, 23);
+		JLabel lblHarmony = new JLabel("harmony");
+		lblHarmony.setVerticalAlignment(SwingConstants.TOP);
+		lblHarmony.setFont(new Font("Segoe UI Light", Font.PLAIN, 25));
+		lblHarmony.setBounds(10, 11, 127, 34);
 		contentPane.add(lblHarmony);
 		
 		JLabel lblEmail = new JLabel("E-Mail:");
@@ -102,5 +136,12 @@ public class Login extends JFrame {
 		lblPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPassword.setBounds(27, 110, 63, 14);
 		contentPane.add(lblPassword);
+		
+		lblStatus = new JLabel("status");
+		lblStatus.setFont(new Font("Segoe UI Light", Font.PLAIN, 11));
+		lblStatus.setText("Waiting...");
+		lblStatus.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblStatus.setBounds(147, 26, 178, 14);
+		contentPane.add(lblStatus);
 	}
 }

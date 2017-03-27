@@ -1,6 +1,7 @@
 package harmony.main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -25,6 +26,8 @@ import de.btobastian.javacord.listener.message.MessageCreateListener;
 
 import javax.swing.JTextPane;
 import javax.swing.ListModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -49,6 +52,23 @@ public class Chat extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					try {
+			            // Set System L&F
+			        UIManager.setLookAndFeel(
+			            UIManager.getSystemLookAndFeelClassName());
+				    } 
+				    catch (UnsupportedLookAndFeelException e) {
+				       // handle exception
+				    }
+				    catch (ClassNotFoundException e) {
+				       // handle exception
+				    }
+				    catch (InstantiationException e) {
+				       // handle exception
+				    }
+				    catch (IllegalAccessException e) {
+				       // handle exception
+				    }
 					Chat frame = new Chat();
 					frame.setVisible(true);
 
@@ -120,6 +140,19 @@ public class Chat extends JFrame {
 		btnClear.setBounds(438, 10, 89, 23);
 		contentPane.add(btnClear);
 		
+		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login.api.disconnect();
+				setVisible(false);
+				Servers.main();
+				dispose();
+				
+			}
+		});
+		btnDisconnect.setBounds(712, 10, 89, 23);
+		contentPane.add(btnDisconnect);
+		
 	}
 	
 	public static void refreshChat(){
@@ -137,6 +170,8 @@ public class Chat extends JFrame {
 			list.setListData(future.get().getMessagesSorted().toArray());
 			list.setBounds(10, 42, 791, 426);
 			list.setAutoscrolls(true);
+			list.setEnabled(false);
+			list.setForeground(new Color(0,0,0));
 			contentPane.add(list);
 			list.updateUI();
 	    } catch (InterruptedException e1) {

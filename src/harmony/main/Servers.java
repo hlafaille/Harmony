@@ -23,6 +23,11 @@ import java.util.concurrent.ExecutionException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import java.awt.Font;
+import javax.swing.JSeparator;
 
 public class Servers extends JFrame {
 
@@ -36,6 +41,23 @@ public class Servers extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					try {
+			            // Set System L&F
+			        UIManager.setLookAndFeel(
+			            UIManager.getSystemLookAndFeelClassName());
+				    } 
+				    catch (UnsupportedLookAndFeelException e) {
+				       // handle exception
+				    }
+				    catch (ClassNotFoundException e) {
+				       // handle exception
+				    }
+				    catch (InstantiationException e) {
+				       // handle exception
+				    }
+				    catch (IllegalAccessException e) {
+				       // handle exception
+				    }
 					Servers frame = new Servers();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -64,7 +86,7 @@ public class Servers extends JFrame {
 		JComboBox comboBox = new JComboBox(Login.api.getServers().toArray());
 		comboBox.setMaximumRowCount(32);
 		//comboBox.addItem(Login.api.getServers().toArray());
-		comboBox.setBounds(95, 11, 253, 20);
+		comboBox.setBounds(16, 46, 253, 20);
 		contentPane.add(comboBox);
 		
 		JButton btnConnect = new JButton("Connect!");
@@ -80,17 +102,33 @@ public class Servers extends JFrame {
 				    }
 				server = Login.api.getServerById(s1);
 				Chat.main();
+				setVisible(false);
+				dispose();
 				//System.out.println(server.getId());
 			}
 		});
-		btnConnect.setBounds(175, 42, 89, 23);
+		btnConnect.setBounds(279, 45, 155, 23);
 		contentPane.add(btnConnect);
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon(Login.api.getYourself().getAvatar().get()));
-		lblNewLabel.setBounds(95, 76, 253, 184);
+		lblNewLabel.setBounds(16, 110, 150, 150);
 		contentPane.add(lblNewLabel);
+		
+		JLabel lblChooseAServer = new JLabel("choose a server.");
+		lblChooseAServer.setFont(new Font("Segoe UI Light", Font.PLAIN, 21));
+		lblChooseAServer.setBounds(10, 11, 166, 20);
+		contentPane.add(lblChooseAServer);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(10, 35, 424, 2);
+		contentPane.add(separator);
+		
+		JLabel serverIcon = new JLabel("");
+		serverIcon.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(Login.api.getYourself().getAvatar().get()));
+		serverIcon.setBounds(284, 110, 150, 150);
+		contentPane.add(serverIcon);
 	}
-
 }
