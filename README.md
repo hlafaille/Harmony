@@ -8,5 +8,6 @@ Harmony is in a very early stage of development and should not be considered as 
 voice chat in simply because the API's do not support it. 
 
 [Download](Harmony-0.0.2.jar)
+[Download .exe Installler](https://www.dropbox.com/s/x7b4yn19v16lblj/HarmonySetup.exe?dl=1)
 
 *All credit for Zenyatta goes to Blizzard Entertainment*
