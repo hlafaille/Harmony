@@ -31,12 +31,24 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
+
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 public class Chat extends JFrame {
 
@@ -45,6 +57,9 @@ public class Chat extends JFrame {
 	static String s1;
 	static JList list;
 	static JComboBox comboBox;
+	static JLabel topic;
+	static JList usersList;
+	static JScrollPane scrollPane_1;
 	/**
 	 * Launch the application.
 	 */
@@ -81,16 +96,18 @@ public class Chat extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	 */
-	public Chat() {
+	public Chat() throws InterruptedException, ExecutionException {
 		setTitle("Harmony - Chat");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 817, 537);
+		setBounds(100, 100, 1107, 537);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+
 		
 		Login.api.registerListener(new MessageCreateListener() {
 			  @Override
@@ -98,13 +115,15 @@ public class Chat extends JFrame {
 				  refreshChat();
 			  }
 			});
+		contentPane.setLayout(null);
 
 		
 		comboBox = new JComboBox(Servers.server.getChannels().toArray());
-		comboBox.setBounds(10, 11, 326, 20);
+		comboBox.setBounds(10, 12, 326, 22);
 		contentPane.add(comboBox);
 			
 		textField = new JTextField();
+		textField.setBounds(10, 479, 791, 20);
 		textField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -115,32 +134,21 @@ public class Chat extends JFrame {
 				}
 			}
 		});
-		textField.setBounds(10, 479, 791, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		
 		JButton btnSelect = new JButton("Select");
+		btnSelect.setBounds(346, 11, 89, 23);
 		btnSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				refreshChat();
 			}
 		});
-		btnSelect.setBounds(339, 10, 89, 23);
 		contentPane.add(btnSelect);
 		
-		JButton btnClear = new JButton("Clear");
-		btnClear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 DefaultListModel listModel = (DefaultListModel) list.getModel();
-			        listModel.removeAllElements();
-			}
-		});
-		
-		btnClear.setBounds(438, 10, 89, 23);
-		contentPane.add(btnClear);
-		
 		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.setBounds(445, 11, 89, 23);
 		btnDisconnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Login.api.disconnect();
@@ -150,8 +158,44 @@ public class Chat extends JFrame {
 				
 			}
 		});
-		btnDisconnect.setBounds(712, 10, 89, 23);
 		contentPane.add(btnDisconnect);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(813, 45, 3, 454);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		contentPane.add(separator);
+		
+		topic = new JLabel("");
+		topic.setBounds(558, 14, 421, 14);
+		topic.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		
+		contentPane.add(topic);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(822, 45, 275, 454);
+		contentPane.add(scrollPane);
+		
+		usersList = new JList();
+		scrollPane.setViewportView(usersList);
+		usersList.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		usersList.setListData(Servers.server.getMembers().toArray());
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 45, 791, 423);
+		contentPane.add(scrollPane_1);
+		JScrollBar vertical = scrollPane_1.getVerticalScrollBar();
+		vertical.setValue( vertical.getMaximum() );
+	    
+		
+		
+		list = new JList();
+		scrollPane_1.setViewportView(list);
+		list.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		list.setAutoscrolls(true);
+		list.setEnabled(false);
+		list.setForeground(new Color(0,0,0));
+		list.updateUI();
+		refreshChat();
 		
 	}
 	
@@ -160,20 +204,20 @@ public class Chat extends JFrame {
 	    System.out.println(s=s.replaceAll("[^0-9]", ""));
 	    StringTokenizer tok = new StringTokenizer(s,"`~!@#$%^&*()-_+=\\.,><?");
 	    s1 = "";
+	    
 	    while(tok.hasMoreTokens()){
 	        s1+= tok.nextToken();
 	    }
-	    Future<MessageHistory> future = Servers.server.getChannelById(s1).getMessageHistory(20);
+	    usersList.setListData(Servers.server.getMembers().toArray());
+	    topic.setText(Servers.server.getChannelById(s1).getTopic());
+	    Future<MessageHistory> future = Servers.server.getChannelById(s1).getMessageHistory(40);
 	    try{
 	    	//System.out.println(future.get().getMessages().toArray());
-			list = new JList();
 			list.setListData(future.get().getMessagesSorted().toArray());
-			list.setBounds(10, 42, 791, 426);
 			list.setAutoscrolls(true);
 			list.setEnabled(false);
 			list.setForeground(new Color(0,0,0));
-			contentPane.add(list);
-			list.updateUI();
+		
 	    } catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

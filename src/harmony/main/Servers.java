@@ -130,5 +130,17 @@ public class Servers extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon(Login.api.getYourself().getAvatar().get()));
 		serverIcon.setBounds(284, 110, 150, 150);
 		contentPane.add(serverIcon);
+		
+		JButton btnLogout = new JButton("Logout");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Login.api.disconnect();
+				Login.main(null);
+				setVisible(false);
+				dispose();
+			}
+		});
+		btnLogout.setBounds(345, 11, 89, 23);
+		contentPane.add(btnLogout);
 	}
 }
