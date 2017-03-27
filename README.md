@@ -1,7 +1,7 @@
 # Harmony
 A Java-based Discord client
 <hr>
-<br><center><h2>"We are in harmony"</h2>
+<br><center><b>"We are in harmony"</b>
 <img src=https://blzgdapipro-a.akamaihd.net/media/artwork/zenyatta-concept.jpg></img>
 </center>
 
