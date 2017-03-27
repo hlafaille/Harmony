@@ -1,6 +1,6 @@
 # Harmony
 A Java-based Discord client
-<hr>
+
 ![Zenyatta](http://i.imgur.com/VUpAM9P.png)
 
 
