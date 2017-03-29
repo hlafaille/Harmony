@@ -1,0 +1,2 @@
+Copy this folder into your Eclipse Workspace, make sure you have WindowBuilder.
+Enjoy!

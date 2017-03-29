@@ -23,6 +23,7 @@ import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.MessageHistory;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
+import harmony.servermanager.AdminPanel;
 
 import javax.swing.JTextPane;
 import javax.swing.ListModel;
@@ -49,6 +50,7 @@ import javax.swing.JScrollBar;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import java.awt.Toolkit;
 
 public class Chat extends JFrame {
 
@@ -60,6 +62,7 @@ public class Chat extends JFrame {
 	static JLabel topic;
 	static JList usersList;
 	static JScrollPane scrollPane_1;
+	private JButton btnAdmin;
 	/**
 	 * Launch the application.
 	 */
@@ -100,6 +103,7 @@ public class Chat extends JFrame {
 	 * @throws InterruptedException 
 	 */
 	public Chat() throws InterruptedException, ExecutionException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Chat.class.getResource("/harmony/main/harmony-heart-icon-79964.png")));
 		setTitle("Harmony - Chat");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -194,6 +198,19 @@ public class Chat extends JFrame {
 		list.setAutoscrolls(true);
 		list.setEnabled(false);
 		list.setForeground(new Color(0,0,0));
+		
+		btnAdmin = new JButton("Admin");
+		btnAdmin.setEnabled(false);
+		btnAdmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminPanel.main();
+				setVisible(false);
+				dispose();
+				
+			}
+		});
+		btnAdmin.setBounds(1008, 12, 89, 23);
+		contentPane.add(btnAdmin);
 		list.updateUI();
 		refreshChat();
 		

@@ -13,8 +13,11 @@ import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
+import harmony.servermanager.CreateServer;
 
 import javax.swing.JComboBox;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -28,12 +31,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import java.awt.Font;
 import javax.swing.JSeparator;
+import java.awt.Toolkit;
 
 public class Servers extends JFrame {
 
-	private JPanel contentPane;
+	private static JPanel contentPane;
 
 	public static Server server;
+	
+	static JComboBox comboBox;
 	/**
 	 * Launch the application.
 	 */
@@ -60,6 +66,7 @@ public class Servers extends JFrame {
 				    }
 					Servers frame = new Servers();
 					frame.setVisible(true);
+					refreshServers();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -74,6 +81,7 @@ public class Servers extends JFrame {
 	 */
 	@SuppressWarnings("unchecked")
 	public Servers() throws InterruptedException, ExecutionException {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Servers.class.getResource("/harmony/main/harmony-heart-icon-79964.png")));
 		setTitle("Harmony - Servers");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,13 +91,14 @@ public class Servers extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JComboBox comboBox = new JComboBox(Login.api.getServers().toArray());
+		comboBox = new JComboBox(Login.api.getServers().toArray());
 		comboBox.setMaximumRowCount(32);
 		//comboBox.addItem(Login.api.getServers().toArray());
 		comboBox.setBounds(16, 46, 253, 20);
 		contentPane.add(comboBox);
 		
 		JButton btnConnect = new JButton("Connect!");
+		btnConnect.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnConnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -126,6 +135,7 @@ public class Servers extends JFrame {
 		contentPane.add(separator);
 		
 		JLabel serverIcon = new JLabel("");
+		serverIcon.setIcon(new ImageIcon(Servers.class.getResource("/harmony/main/rsz_harmony-heart-icon-79964.png")));
 		serverIcon.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setIcon(new ImageIcon(Login.api.getYourself().getAvatar().get()));
 		serverIcon.setBounds(284, 110, 150, 150);
@@ -142,5 +152,20 @@ public class Servers extends JFrame {
 		});
 		btnLogout.setBounds(345, 11, 89, 23);
 		contentPane.add(btnLogout);
+		
+		JButton btnNewButton = new JButton("Create");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreateServer.main();
+				setVisible(false);
+				dispose();
+			}
+		});
+		btnNewButton.setBounds(279, 76, 155, 23);
+		contentPane.add(btnNewButton);
+	}
+	public static void refreshServers(){
+		DefaultComboBoxModel model = new DefaultComboBoxModel( Login.api.getServers().toArray() );
+		comboBox.setModel(model);
 	}
 }
