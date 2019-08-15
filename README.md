@@ -1,4 +1,5 @@
 # Harmony
+!!Deprecated, no longer works!!
 A Java-based Discord client
 
 ![Zenyatta](http://i.imgur.com/VUpAM9P.png)
